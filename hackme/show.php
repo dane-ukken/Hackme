@@ -49,7 +49,7 @@
 	</div>
     
     <?php
-		if ($_COOKIE[hackme] == $thisthread[username])
+		if (decryptData($_COOKIE['hackme']) == $thisthread[username])
 		{
 	?>
     	<a href="show.php?delpid=<?php echo $thisthread[id]?>">DELETE</a>

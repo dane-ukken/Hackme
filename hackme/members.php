@@ -4,8 +4,10 @@
 	connect();
 	$mysqli = new mysqli("127.0.0.1","cs6324spring24","8mwni8URcsr08bCxx","cs6324spring24");
 
-	require_once 'crypto.php'; 
+	require_once 'crypto.php';
 
+	$test1 = "Reached 1";
+	$test2 = "Reached 2";
 	//if the login form is submitted 
 	if (isset($_POST['submit'])) {
     
@@ -16,21 +18,15 @@
 		
 		$post_uname = $_POST['username'];
 		$post_password = $_POST['password'];
-		$encrypted_uname = encryptData($post_uname);
-		
+
 		$res = $mysqli->query("SELECT * FROM users WHERE username = '" . $post_uname . "'") or die(mysqli_error($mysqli));
 	
 		if ($res) {
 			$row = $res->fetch_assoc();
 			if ($row && password_verify($post_password, $row['pass'])) {
-				$hour = time() + 3600; 
-				//setcookie('hackme', $post_uname, $hour, "/", "", false, false);
-				setcookie('hackme', $encrypted_uname, [
-					'expires' => $hour,
-					'path' => '/',
-					'httponly' => true,
-					'samesite' => 'Strict'
-				]);
+				$hour = time() + 3600;
+				$encrypted_uname = encryptData($post_uname);
+				setcookie('hackme', $encrypted_uname, $hour, '/~dsu220000', '', false, true);
 				header("Location: members.php");
 				exit;
 			} else {
@@ -41,7 +37,7 @@
 			die("<p>Sorry, username does not exist.</p>");
 		}
 	}
-		?>  
+?>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -61,7 +57,7 @@
 			}else
 			{
 				$decryptedData = decryptData($_COOKIE['hackme']);
-				print("<p>Logged in as <a>$decryptedData</a></p>");
+				print("<p>Logged in as <a>{$decryptedData}</a></p>");
 			}
 			?>
         </div>
